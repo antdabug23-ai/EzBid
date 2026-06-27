@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # EZ Bid
 
 A mobile-friendly local service marketplace that connects customers with local blue-collar service vendors. Customers post jobs, vendors submit bids, and customers accept one bid. A finder's fee is recorded, and the customer's exact address stays private until the fee is confirmed.
@@ -43,85 +44,159 @@ cp .env.example .env
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-- `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` — credentials for the seeded admin account
+# EZ Bid
 
-### 4. Create the database schema and seed data
+EZ Bid is a mobile-friendly local service marketplace that connects customers with local service vendors.
+
+Customers can post jobs, vendors can submit bids, and customers can choose the vendor they want to work with.
+
+This is the MVP/beta version: simple, clean, and designed to be upgraded over time.
+
+## Current MVP Status
+
+For now, EZ Bid is free during beta.
+
+* Customers can post jobs and compare bids.
+* Vendors can create profiles and submit bids.
+* Admin tools are included for basic platform management.
+* Payment features are not active yet.
+
+## Tech Stack
+
+* Next.js App Router
+* TypeScript
+* Tailwind CSS
+* PostgreSQL
+* Prisma ORM
+* Zod validation
+* Local authentication
+* Local file upload structure for development
+
+## Getting Started
+
+### 1. Install dependencies
 
 ```bash
-npm run db:push      # create tables from prisma/schema.prisma
-npm run db:seed      # seed service categories + an admin user
+npm install
 ```
 
-(Or use `npm run db:migrate` if you prefer tracked migrations.)
+### 2. Configure environment variables
 
-### 5. Run the app
+Create a `.env` file in the root of the project.
+
+Required values:
+
+```bash
+DATABASE_URL="your-database-url"
+AUTH_SECRET="your-auth-secret"
+NEXTAUTH_URL="http://localhost:3000"
+SEED_ADMIN_EMAIL="admin@ezbid.local"
+SEED_ADMIN_PASSWORD="admin12345"
+```
+
+Do not commit your real `.env` file to GitHub.
+
+### 3. Generate Prisma client
+
+```bash
+npx prisma generate
+```
+
+### 4. Create or update the database
+
+```bash
+npx prisma migrate dev --name init
+```
+
+### 5. Seed starter data
+
+```bash
+npx prisma db seed
+```
+
+### 6. Run the app locally
 
 ```bash
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open:
 
-## Default accounts
-
-- **Admin**: the credentials from `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` (default `admin@ezbid.local` / `admin12345`).
-- **Customers / Vendors**: create them via the signup pages (`/signup/customer`, `/signup/vendor`).
-
-## Core flow to try
-
-1. Sign up as a **customer** and post a job (`/customer/jobs/new`).
-2. Sign up as a **vendor**, complete the profile, and submit a bid on that job.
-3. As the customer, compare bids and accept one — a finder's fee is recorded as `PENDING`.
-4. Log in as **admin** and confirm the finder's fee (`/admin/finder-fees`).
-5. As the winning vendor, open the job — the exact address and customer contact are now unlocked.
-6. As the customer, mark the job completed and leave a review. The vendor's rating updates.
-
-## Project structure
-
+```bash
+http://localhost:3000
 ```
+
+## Default Admin Account
+
+The seeded admin account uses the values from:
+
+```bash
+SEED_ADMIN_EMAIL
+SEED_ADMIN_PASSWORD
+```
+
+Default local development values:
+
+```bash
+admin@ezbid.local
+admin12345
+```
+
+## Core MVP Flow
+
+1. Customer signs up.
+2. Customer posts a job.
+3. Vendor signs up.
+4. Vendor completes a profile.
+5. Vendor submits a bid.
+6. Customer compares bids.
+7. Customer accepts one bid.
+8. Job can be completed.
+9. Customer can leave a review.
+
+## Project Structure
+
+```bash
 prisma/
-  schema.prisma        # models, enums, indexes
-  seed.ts              # service categories + admin
+  schema.prisma
+  seed.ts
+
 src/
   app/
-    (public)/          # home, how-it-works, login, signup
-    customer/          # customer dashboard & pages
-    vendor/            # vendor dashboard & pages
-    admin/             # admin dashboard & pages
-    api/upload/        # protected file upload route
+    public pages
+    customer pages
+    vendor pages
+    admin pages
+
   components/
-    ui/                # Button, Input, Card, Badge, FileUpload, ...
-    shared/            # PageHeader, EmptyState, states, StatusBadge, StatCard
-    jobs/ bids/ vendors/ reviews/ profile/ layout/ admin/
+    ui components
+    shared components
+
   lib/
-    auth/              # session, password, role guards
-    db/                # Prisma client
-    validations/       # Zod schemas
-    services/          # business logic (jobs, bids, finderFees, reviews, ...)
-    actions/           # server actions
-    utils/             # formatting & labels
+    auth
+    db
+    validations
+    services
+    actions
+    utils
 ```
 
-## Business rules (where they live)
+## Important MVP Notes
 
-- **Finder's fee calculation** — `src/lib/services/finderFees.ts` (`calculateFinderFee`)
-- **Bid acceptance (transactional)** — `src/lib/services/bids.ts` (`acceptBid`)
-- **Address unlock logic** — `src/lib/services/authorization.ts` (`canViewExactJobLocation`)
-- **Review rules + rating recompute** — `src/lib/services/reviews.ts`
-- **Verification** — `src/lib/services/verification.ts`
+This version is intentionally simple.
 
-## Finder's fee tiers (MVP)
+Do not add advanced features until the core marketplace flow is stable.
 
-| Accepted bid amount | Fee |
-| --- | --- |
-| $0 – $249 | $10 flat |
-| $250 – $499 | $20 flat |
-| $500 – $999 | 5% |
-| $1,000 – $2,499 | 4% |
-| $2,500+ | 3% (future cap) |
+Future upgrades may include:
 
-Always rounded up to the nearest dollar.
+* Payments
+* Customer access plans
+* Vendor tools
+* Messaging
+* Scheduling
+* Invoicing
+* Analytics
+* AI quote assistance
+* Native mobile apps
 
-## Future upgrades (designed for, not built)
-
-Payments/Stripe, recurring contracts, rewards, vendor subscriptions, masked phone numbers, in-app messaging, scheduling, invoicing, analytics, AI quote assistant, and native apps. The service layer and finder-fee seam are structured so these can be added without a rewrite.
+These features are not active in the current MVP.
