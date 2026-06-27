@@ -1,0 +1,299 @@
+// EZ Bid - Prisma schema
+// PostgreSQL + Prisma. IDs use cuid(). createdAt/updatedAt where appropriate.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------- Enums -----------------------------
+
+enum UserRole {
+  CUSTOMER
+  VENDOR
+  ADMIN
+}
+
+enum JobStatus {
+  OPEN
+  BIDDING
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum BidStatus {
+  SUBMITTED
+  ACCEPTED
+  DECLINED
+  WITHDRAWN
+}
+
+enum VerificationStatus {
+  NOT_VERIFIED
+  PENDING_REVIEW
+  DOCUMENT_VERIFIED
+  TRADE_VERIFIED
+  REJECTED
+}
+
+enum DocumentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum FinderFeeStatus {
+  PENDING
+  CONFIRMED
+  INVOICED
+  PAID
+  WAIVED
+}
+
+enum ServiceWindow {
+  MORNING
+  AFTERNOON
+  EVENING
+  FLEXIBLE
+}
+
+enum UrgencyLevel {
+  LOW
+  NORMAL
+  HIGH
+  EMERGENCY
+}
+
+// ----------------------------- Models -----------------------------
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         UserRole
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  customerProfile CustomerProfile?
+  vendorProfile   VendorProfile?
+
+  @@index([email])
+  @@index([role])
+}
+
+model CustomerProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  firstName String
+  lastName  String
+  phone     String?
+  town      String?
+  state     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobs    Job[]
+  reviews Review[]
+}
+
+model VendorProfile {
+  id                     String             @id @default(cuid())
+  userId                 String             @unique
+  businessName           String
+  description            String?
+  phone                  String?
+  email                  String?
+  website                String?
+  town                   String?
+  state                  String?
+  serviceAreaDescription String?
+  logoUrl                String?
+  verificationStatus     VerificationStatus @default(NOT_VERIFIED)
+  averageRating          Float              @default(0)
+  reviewCount            Int                @default(0)
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+
+  user             User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceCategories VendorServiceCategory[]
+  bids             Bid[]
+  documents        VendorDocument[]
+  workPhotos       VendorWorkPhoto[]
+  reviews          Review[]
+  finderFees       FinderFee[]
+
+  @@index([verificationStatus])
+  @@index([town, state])
+}
+
+model ServiceCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  jobs    Job[]
+  vendors VendorServiceCategory[]
+}
+
+model VendorServiceCategory {
+  id                String   @id @default(cuid())
+  vendorId          String
+  serviceCategoryId String
+  createdAt         DateTime @default(now())
+
+  vendor          VendorProfile   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  serviceCategory ServiceCategory @relation(fields: [serviceCategoryId], references: [id], onDelete: Cascade)
+
+  @@unique([vendorId, serviceCategoryId])
+  @@index([serviceCategoryId])
+}
+
+model Job {
+  id                    String        @id @default(cuid())
+  customerId            String
+  serviceCategoryId     String
+  title                 String
+  description           String
+  town                  String
+  state                 String
+  exactAddress          String // private; never exposed in list queries
+  budgetMin             Int?
+  budgetMax             Int?
+  requestedServiceDate  DateTime?
+  preferredServiceWindow ServiceWindow @default(FLEXIBLE)
+  isDateFlexible        Boolean        @default(true)
+  urgencyLevel          UrgencyLevel   @default(NORMAL)
+  status                JobStatus      @default(OPEN)
+  acceptedBidId         String?        @unique
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  customer        CustomerProfile @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  serviceCategory ServiceCategory @relation(fields: [serviceCategoryId], references: [id])
+  acceptedBid     Bid?            @relation("AcceptedBid", fields: [acceptedBidId], references: [id])
+
+  bids       Bid[]       @relation("JobBids")
+  photos     JobPhoto[]
+  review     Review?
+  finderFee  FinderFee?
+
+  @@index([status])
+  @@index([serviceCategoryId])
+  @@index([town, state])
+  @@index([customerId])
+}
+
+model JobPhoto {
+  id        String   @id @default(cuid())
+  jobId     String
+  url       String
+  createdAt DateTime @default(now())
+
+  job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+}
+
+model Bid {
+  id                   String        @id @default(cuid())
+  jobId                String
+  vendorId             String
+  amount               Int
+  description          String?
+  earliestAvailableDate DateTime?
+  proposedServiceDate  DateTime?
+  proposedServiceWindow ServiceWindow @default(FLEXIBLE)
+  estimatedTimeline    String?
+  status               BidStatus      @default(SUBMITTED)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  job    Job           @relation("JobBids", fields: [jobId], references: [id], onDelete: Cascade)
+  vendor VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  acceptedOnJob Job?       @relation("AcceptedBid")
+  finderFee     FinderFee?
+
+  @@unique([jobId, vendorId])
+  @@index([jobId])
+  @@index([vendorId])
+  @@index([status])
+}
+
+model VendorDocument {
+  id           String         @id @default(cuid())
+  vendorId     String
+  documentType String
+  fileUrl      String
+  status       DocumentStatus @default(PENDING)
+  adminNotes   String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  vendor VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([vendorId])
+  @@index([status])
+}
+
+model VendorWorkPhoto {
+  id        String   @id @default(cuid())
+  vendorId  String
+  url       String
+  caption   String?
+  createdAt DateTime @default(now())
+
+  vendor VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([vendorId])
+}
+
+model Review {
+  id                  String   @id @default(cuid())
+  jobId               String   @unique
+  customerId          String
+  vendorId            String
+  overallRating       Int
+  qualityRating       Int?
+  communicationRating Int?
+  timelinessRating    Int?
+  professionalismRating Int?
+  writtenReview       String?
+  createdAt           DateTime @default(now())
+
+  job      Job             @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  customer CustomerProfile @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  vendor   VendorProfile   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([vendorId])
+}
+
+model FinderFee {
+  id               String          @id @default(cuid())
+  jobId            String          @unique
+  bidId            String          @unique
+  vendorId         String
+  acceptedBidAmount Int
+  feeAmount        Int
+  status           FinderFeeStatus @default(PENDING)
+  confirmedAt      DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  job    Job           @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  bid    Bid           @relation(fields: [bidId], references: [id], onDelete: Cascade)
+  vendor VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([vendorId])
+}
