@@ -1,4 +1,31 @@
 import type { Metadata } from "next";
+import {
+  Trees,
+  Sprout,
+  SprayCan,
+  Hammer,
+  Droplets,
+  AirVent,
+  Zap,
+  Trash2,
+  Sparkles,
+  Axe,
+  CloudRain,
+  Snowflake,
+  Paintbrush,
+  Construction,
+  Layers,
+  WashingMachine,
+  Truck,
+  Pickaxe,
+  Warehouse,
+  Leaf,
+  Package,
+  Waves,
+  PaintBucket,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react";
 import { SiteFooter } from "@/components/site/SiteFooter";
 
 export const metadata: Metadata = {
@@ -6,6 +33,38 @@ export const metadata: Metadata = {
   description:
     "Browse the home, property, and small business services available on EZ Bid. Find local vendors for landscaping, handyman work, cleaning, and more.",
 };
+
+type ServiceVisual = { Icon: LucideIcon; tint: string };
+
+const SERVICE_VISUALS: Record<string, ServiceVisual> = {
+  Landscaping: { Icon: Trees, tint: "bg-emerald-50 text-emerald-600" },
+  "Lawn mowing": { Icon: Sprout, tint: "bg-lime-50 text-lime-600" },
+  "Power washing": { Icon: SprayCan, tint: "bg-blue-50 text-blue-600" },
+  "Handyman services": { Icon: Hammer, tint: "bg-orange-50 text-orange-600" },
+  Plumbing: { Icon: Droplets, tint: "bg-sky-50 text-sky-600" },
+  HVAC: { Icon: AirVent, tint: "bg-cyan-50 text-cyan-600" },
+  "Electrical work": { Icon: Zap, tint: "bg-amber-50 text-amber-600" },
+  "Junk removal": { Icon: Trash2, tint: "bg-stone-100 text-stone-600" },
+  "House cleaning": { Icon: Sparkles, tint: "bg-violet-50 text-violet-600" },
+  "Tree removal": { Icon: Axe, tint: "bg-emerald-50 text-emerald-700" },
+  "Gutter cleaning": { Icon: CloudRain, tint: "bg-sky-50 text-sky-600" },
+  "Snow removal": { Icon: Snowflake, tint: "bg-blue-50 text-blue-500" },
+  Painting: { Icon: Paintbrush, tint: "bg-rose-50 text-rose-600" },
+  "Fence repair": { Icon: Construction, tint: "bg-amber-50 text-amber-700" },
+  "Deck repair": { Icon: Layers, tint: "bg-orange-50 text-orange-700" },
+  "Appliance installation": { Icon: WashingMachine, tint: "bg-slate-100 text-slate-600" },
+  "Moving help": { Icon: Truck, tint: "bg-indigo-50 text-indigo-600" },
+  "Small demolition": { Icon: Pickaxe, tint: "bg-stone-100 text-stone-600" },
+  "Garage cleanout": { Icon: Warehouse, tint: "bg-slate-100 text-slate-600" },
+  "Yard cleanup": { Icon: Leaf, tint: "bg-lime-50 text-lime-600" },
+  "Mulch installation": { Icon: Package, tint: "bg-amber-50 text-amber-700" },
+  "Pressure washing": { Icon: Waves, tint: "bg-blue-50 text-blue-600" },
+  "Driveway sealing": { Icon: PaintBucket, tint: "bg-zinc-100 text-zinc-700" },
+};
+
+function getVisual(name: string): ServiceVisual {
+  return SERVICE_VISUALS[name] ?? { Icon: Wrench, tint: "bg-slate-100 text-slate-500" };
+}
 
 const availableServices = [
   "Landscaping",
@@ -58,40 +117,41 @@ function ServiceCard({
   name: string;
   available: boolean;
 }) {
+  const { Icon, tint } = getVisual(name);
+
   return (
     <div
-      className={`flex flex-col rounded-2xl border p-5 shadow-sm transition ${
+      className={`relative flex items-center gap-4 rounded-2xl border p-4 shadow-sm transition ${
         available
           ? "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
           : "border-slate-200 bg-slate-50"
       }`}
     >
-      <div className="flex items-center justify-between">
-        <span
-          className={`flex h-10 w-10 items-center justify-center rounded-xl text-base font-bold ${
-            available
-              ? "bg-blue-100 text-blue-700"
-              : "bg-slate-200 text-slate-500"
-          }`}
-        >
-          {name.charAt(0)}
-        </span>
-        <span
-          className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-            available
-              ? "bg-emerald-100 text-emerald-700"
-              : "bg-amber-100 text-amber-700"
-          }`}
-        >
-          {available ? "Available" : "Coming soon"}
-        </span>
-      </div>
       <span
-        className={`mt-4 text-sm font-semibold ${
+        className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl ${
+          available ? tint : "bg-slate-200 text-slate-400"
+        }`}
+      >
+        <Icon className="h-7 w-7" strokeWidth={1.75} aria-hidden />
+      </span>
+
+      <span
+        className={`text-sm font-semibold ${
           available ? "text-slate-800" : "text-slate-500"
         }`}
       >
         {name}
+      </span>
+
+      <span
+        className={`absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${
+          available ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+        }`}
+      >
+        {available ? (
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+        ) : null}
+        {available ? "Available" : "Coming soon"}
       </span>
     </div>
   );
@@ -112,8 +172,8 @@ export default function ServicesPage() {
             Services on EZ Bid
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-            Find local vendors for common home, property, and small business
-            service needs.
+            Request bids from local independent vendors, small crews, and growing
+            service businesses.
           </p>
         </div>
       </section>
@@ -129,7 +189,7 @@ export default function ServicesPage() {
               Services you can request from local vendors today.
             </p>
           </div>
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {availableServices.map((name) => (
               <ServiceCard key={name} name={name} available />
             ))}
@@ -148,7 +208,7 @@ export default function ServicesPage() {
               More service categories we plan to add.
             </p>
           </div>
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {comingSoonServices.map((name) => (
               <ServiceCard key={name} name={name} available={false} />
             ))}

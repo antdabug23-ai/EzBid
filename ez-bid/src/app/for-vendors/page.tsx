@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 export const metadata: Metadata = {
   title: "For Vendors — EZ Bid",
   description:
-    "Find local jobs, submit bids, and grow your service business on EZ Bid. Create a profile, choose your services, and build trust through reviews.",
+    "Start small, build reviews, and grow your business on EZ Bid. Built for local independent workers and small crews — find nearby jobs and earn work during beta.",
 };
 
 const vendorSteps = [
@@ -16,13 +16,33 @@ const vendorSteps = [
 ];
 
 const goodFitFor = [
-  "Landscapers",
+  "Solo landscapers",
   "Handymen",
-  "Cleaners",
-  "Junk removal companies",
-  "Power washing businesses",
-  "Contractors",
-  "Independent service pros",
+  "Cleaners and small crews",
+  "Junk removal",
+  "Weekend power washers",
+  "Independent contractors",
+  "Side hustlers going full-time",
+  "Small family-run businesses",
+];
+
+const growthPoints = [
+  {
+    title: "Find nearby jobs",
+    body: "Browse open customer jobs in your service area and pick the work you want.",
+  },
+  {
+    title: "Submit bids during beta",
+    body: "Send bids on jobs that fit your skills. EZ Bid is free for vendors during beta.",
+  },
+  {
+    title: "Build customer reviews",
+    body: "Complete jobs and earn honest reviews that show new customers you do good work.",
+  },
+  {
+    title: "Grow from side work to a real business",
+    body: "Start small, build a reputation one job at a time, and grow at your own pace.",
+  },
 ];
 
 export default function ForVendorsPage() {
@@ -37,16 +57,18 @@ export default function ForVendorsPage() {
             Free during beta
           </span>
           <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-            For Vendors
+            Start small. Build reviews. Grow your business.
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-            Find local jobs, submit bids, and grow your service business.
+            Whether you are mowing lawns with your dad&apos;s mower, power washing
+            driveways on weekends, or growing a small crew, EZ Bid helps you find
+            local jobs and build your reputation.
           </p>
           <p className="mx-auto mt-5 max-w-3xl text-base text-slate-600">
-            With EZ Bid, you can create a profile and view jobs in your service
-            area, then submit bids on the work you want. Show your experience,
-            photos, and service categories so customers get to know your
-            business, and build trust over time through reviews.
+            Create a profile and view jobs in your service area, then submit bids
+            on the work you want. Show your experience, photos, and service
+            categories so customers get to know your business, and build trust over
+            time through reviews — no big marketing budget needed.
           </p>
           <div className="mt-8 flex justify-center">
             <a
@@ -103,8 +125,38 @@ export default function ForVendorsPage() {
         </div>
       </section>
 
-      {/* Good fit for */}
+      {/* Built for the little guy */}
       <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-16">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+              Built for the little guy
+            </span>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900">
+              A fair place to compete for nearby jobs
+            </h2>
+            <p className="mt-2 text-slate-600">
+              EZ Bid is built for local independent workers and small crews.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {growthPoints.map((point) => (
+              <div
+                key={point.title}
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+              >
+                <h3 className="text-base font-semibold text-slate-900">
+                  {point.title}
+                </h3>
+                <p className="mt-2 text-sm text-slate-600">{point.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Good fit for */}
+      <section className="bg-slate-50">
         <div className="mx-auto max-w-6xl px-4 py-16">
           <div className="rounded-3xl border border-emerald-100 bg-emerald-50/60 p-8">
             <h2 className="text-2xl font-bold tracking-tight text-slate-900">

@@ -8,10 +8,11 @@ export const metadata: Metadata = {
 };
 
 const beliefs = [
-  "Local businesses matter",
+  "Local independent workers and small businesses matter",
+  "The little guy deserves a fair shot at nearby jobs",
   "Customers deserve simple options",
   "Privacy should be respected",
-  "Vendors should have a fair way to find jobs",
+  "Reputation should be earned through completed jobs and reviews",
   "The process should be simple and transparent",
 ];
 
@@ -54,9 +55,9 @@ export default function AboutPage() {
           </p>
           <p className="mx-auto mt-5 max-w-3xl text-base text-slate-600">
             EZ Bid helps customers avoid calling around to multiple vendors by
-            letting them post one job and compare bids in one place. It also
-            helps local vendors find work that matches their service area and
-            skills.
+            letting them post one job and compare bids in one place. It also helps
+            local independent workers and small businesses find work that matches
+            their service area and skills, and build a reputation one job at a time.
           </p>
         </div>
       </section>
@@ -69,8 +70,14 @@ export default function AboutPage() {
               Our mission
             </h2>
             <p className="mt-4 max-w-3xl text-base text-slate-600">
-              Make local service hiring easier for customers and better organized
-              for vendors.
+              EZ Bid was built to make local home services fairer. Homeowners
+              deserve a simple way to compare bids without giving away private
+              information too early, and local workers deserve a fair place to earn
+              jobs, build reviews, and grow their businesses.
+            </p>
+            <p className="mt-4 max-w-3xl text-base text-slate-600">
+              We believe someone with skill, hustle, and a few tools should have a
+              real chance to build something.
             </p>
           </div>
         </div>

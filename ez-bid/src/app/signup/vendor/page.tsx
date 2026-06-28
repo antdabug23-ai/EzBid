@@ -19,7 +19,8 @@ export default function VendorSignupPage() {
           </span>
           <h1 className="mt-4 text-2xl font-bold text-slate-900">Create your vendor account</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Create a profile, browse local jobs, and submit bids.
+            Create a vendor account to start finding local jobs, building reviews,
+            and growing your service business during beta.
           </p>
         </div>
         <Card>

@@ -65,16 +65,15 @@ export default function ForCustomersPage() {
             For Customers
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-            Post a job, compare local bids, and choose the vendor that fits your
-            needs.
+            EZ Bid helps you compare bids from local independent vendors and small
+            service businesses, not just big companies with big marketing budgets.
           </p>
           <p className="mx-auto mt-5 max-w-3xl text-base text-slate-600">
-            EZ Bid is built to protect your privacy. You start by sharing only
-            your approximate area, and your exact address and contact details are
-            only shared later, when you are ready. That means you can compare
-            local vendors while keeping your personal information limited during
-            early bidding, and you always stay in control of which vendor you
-            choose.
+            EZ Bid is built to protect your privacy. You stay in control. Your exact
+            address and contact information stay private until you choose a vendor and
+            the job is confirmed. That means you can compare local vendors while
+            keeping your personal information limited during early bidding — and
+            support local people building real businesses at the same time.
           </p>
           <div className="mt-8 flex justify-center">
             <a

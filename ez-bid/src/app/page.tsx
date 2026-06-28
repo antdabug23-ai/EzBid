@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 export const metadata: Metadata = {
   title: "EZ Bid — Find trusted local service vendors faster",
   description:
-    "EZ Bid helps customers post jobs, compare bids, and connect with local vendors for home and property services. Free during beta.",
+    "EZ Bid helps homeowners connect with local independent workers, small crews, and growing service businesses, while giving vendors a fair place to earn work and build reviews. Free during beta.",
 };
 
 type Service = {
@@ -103,11 +103,12 @@ export default function HomePage() {
               Free during beta
             </span>
             <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-              Find trusted local service vendors faster.
+              Compare bids from local independent service providers.
             </h1>
             <p className="mt-5 max-w-xl text-lg text-slate-600">
-              EZ Bid helps customers post jobs, compare bids, and connect with
-              local vendors for home and property services.
+              EZ Bid helps homeowners connect with local independent workers,
+              small crews, and growing service businesses — while giving vendors
+              a fair place to earn work and build reviews.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
@@ -198,6 +199,27 @@ export default function HomePage() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Built for the little guy */}
+      <section className="bg-slate-50">
+        <div className="mx-auto max-w-6xl px-4 py-16">
+          <div className="rounded-3xl border border-emerald-100 bg-emerald-50/60 p-8 sm:p-10">
+            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+              Built for the little guy
+            </span>
+            <h2 className="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              A fair place to compete for nearby jobs.
+            </h2>
+            <p className="mt-3 max-w-3xl text-base text-slate-600">
+              From a first lawn mowing customer to a growing local business, EZ Bid
+              helps motivated service providers build a reputation one job at a time.
+              No big marketing budget needed — just show up, do good work, and earn
+              reviews. When you hire on EZ Bid, you are supporting local people
+              building real businesses.
+            </p>
           </div>
         </div>
       </section>
