@@ -4,8 +4,20 @@ import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import type { CustomerSignupInput, VendorSignupInput } from "@/lib/validations/auth";
 import { DUPLICATE_EMAIL_MESSAGE, ServiceError } from "./errors";
 
-async function assertEmailAvailable(email: string) {
+type RegisterHooks = {
+  onEmailCheckStarted?: () => void;
+  onEmailCheckPassed?: () => void;
+  onPasswordHashStarted?: () => void;
+  onPasswordHashPassed?: () => void;
+  onCreateStarted?: () => void;
+  onCreatePassed?: () => void;
+  onCreateFailed?: (name: string, code?: string) => void;
+};
+
+async function assertEmailAvailable(email: string, hooks?: RegisterHooks) {
+  hooks?.onEmailCheckStarted?.();
   const existing = await prisma.user.findUnique({ where: { email } });
+  hooks?.onEmailCheckPassed?.();
   if (existing) throw new ServiceError(DUPLICATE_EMAIL_MESSAGE);
 }
 
@@ -16,13 +28,17 @@ function rethrowDuplicateEmail(err: unknown): never {
   throw err;
 }
 
-export async function registerCustomer(input: CustomerSignupInput) {
+export async function registerCustomer(input: CustomerSignupInput, hooks?: RegisterHooks) {
   const email = input.email.toLowerCase().trim();
-  await assertEmailAvailable(email);
-  const passwordHash = await hashPassword(input.password);
+  await assertEmailAvailable(email, hooks);
 
+  hooks?.onPasswordHashStarted?.();
+  const passwordHash = await hashPassword(input.password);
+  hooks?.onPasswordHashPassed?.();
+
+  hooks?.onCreateStarted?.();
   try {
-    return await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         email,
         passwordHash,
@@ -38,7 +54,16 @@ export async function registerCustomer(input: CustomerSignupInput) {
         },
       },
     });
+    hooks?.onCreatePassed?.();
+    return user;
   } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      hooks?.onCreateFailed?.(err.name, err.code);
+    } else if (err instanceof Error) {
+      hooks?.onCreateFailed?.(err.name);
+    } else {
+      hooks?.onCreateFailed?.("UnknownError");
+    }
     rethrowDuplicateEmail(err);
   }
 }

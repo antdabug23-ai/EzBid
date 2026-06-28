@@ -67,7 +67,13 @@ export function toErrorState(err: unknown, context = "form"): FormState {
   logAuthError(context, err);
 
   if (err instanceof ZodError) {
-    return { ok: false, fieldErrors: zodToFieldErrors(err) };
+    const fieldErrors = zodToFieldErrors(err);
+    const firstMessage = err.issues[0]?.message;
+    return {
+      ok: false,
+      fieldErrors,
+      ...(firstMessage ? { error: firstMessage } : {}),
+    };
   }
 
   if (err instanceof ServiceError) {
