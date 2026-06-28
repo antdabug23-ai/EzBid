@@ -3,13 +3,23 @@ import type { Metadata } from "next";
 import { requireCustomer } from "@/lib/auth/current-user";
 import { Card, CardContent } from "@/components/ui/card";
 import { NewJobForm } from "@/components/jobs/NewJobForm";
+import { SERVICE_CATEGORIES } from "@/lib/validations/job";
 
 export const metadata: Metadata = {
   title: "Post a New Job — EZ Bid",
 };
 
-export default async function NewJobPage() {
+export default async function NewJobPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ service?: string }>;
+}) {
   const { profile } = await requireCustomer();
+  const { service } = await searchParams;
+  const presetService =
+    service && (SERVICE_CATEGORIES as readonly string[]).includes(service)
+      ? service
+      : "";
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -33,6 +43,7 @@ export default async function NewJobPage() {
             <NewJobForm
               defaultTown={profile.town ?? ""}
               defaultState={profile.state ?? ""}
+              defaultServiceCategory={presetService}
             />
           </CardContent>
         </Card>

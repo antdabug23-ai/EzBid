@@ -24,9 +24,11 @@ function FieldError({ message }: { message?: string }) {
 export function NewJobForm({
   defaultTown = "",
   defaultState = "",
+  defaultServiceCategory = "",
 }: {
   defaultTown?: string;
   defaultState?: string;
+  defaultServiceCategory?: string;
 }) {
   const [state, formAction] = useActionState(createJobAction, initialFormState);
   const fe = state.fieldErrors;
@@ -49,7 +51,13 @@ export function NewJobForm({
         <label htmlFor="serviceCategory" className={labelClass}>
           Service category
         </label>
-        <select id="serviceCategory" name="serviceCategory" required defaultValue="" className={selectClass}>
+        <select
+          id="serviceCategory"
+          name="serviceCategory"
+          required
+          defaultValue={defaultServiceCategory}
+          className={selectClass}
+        >
           <option value="" disabled>
             Select a category
           </option>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   Trees,
   Sprout,
@@ -66,6 +67,39 @@ function getVisual(name: string): ServiceVisual {
   return SERVICE_VISUALS[name] ?? { Icon: Wrench, tint: "bg-slate-100 text-slate-500" };
 }
 
+// Maps a service card to a job-posting category. Categories must match the
+// options in the job form (lib/validations/job.ts). Anything without a direct
+// match falls back to "Other".
+const SERVICE_CATEGORY: Record<string, string> = {
+  Landscaping: "Landscaping",
+  "Lawn mowing": "Lawn Mowing",
+  "Power washing": "Power Washing",
+  "Handyman services": "Handyman",
+  Plumbing: "Plumbing",
+  HVAC: "HVAC",
+  "Electrical work": "Electrical",
+  "Junk removal": "Junk Removal",
+  "House cleaning": "House Cleaning",
+  "Tree removal": "Tree Removal",
+  "Gutter cleaning": "Other",
+  "Snow removal": "Other",
+  Painting: "Other",
+  "Fence repair": "Handyman",
+  "Deck repair": "Handyman",
+  "Appliance installation": "Handyman",
+  "Moving help": "Other",
+  "Small demolition": "Other",
+  "Garage cleanout": "Junk Removal",
+  "Yard cleanup": "Landscaping",
+  "Mulch installation": "Landscaping",
+  "Pressure washing": "Power Washing",
+  "Driveway sealing": "Other",
+};
+
+function getCategory(name: string): string {
+  return SERVICE_CATEGORY[name] ?? "Other";
+}
+
 const availableServices = [
   "Landscaping",
   "Lawn mowing",
@@ -110,7 +144,7 @@ const comingSoonServices = [
   "Small engine repair",
 ];
 
-function ServiceCard({
+function ServiceCardInner({
   name,
   available,
 }: {
@@ -120,23 +154,17 @@ function ServiceCard({
   const { Icon, tint } = getVisual(name);
 
   return (
-    <div
-      className={`relative flex items-center gap-4 rounded-2xl border p-4 shadow-sm transition ${
-        available
-          ? "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
-          : "border-slate-200 bg-slate-50"
-      }`}
-    >
+    <>
       <span
-        className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl ${
+        className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-xl ${
           available ? tint : "bg-slate-200 text-slate-400"
         }`}
       >
-        <Icon className="h-7 w-7" strokeWidth={1.75} aria-hidden />
+        <Icon className="h-8 w-8" strokeWidth={1.75} aria-hidden />
       </span>
 
       <span
-        className={`text-sm font-semibold ${
+        className={`min-w-0 pr-20 text-sm font-semibold ${
           available ? "text-slate-800" : "text-slate-500"
         }`}
       >
@@ -153,6 +181,34 @@ function ServiceCard({
         ) : null}
         {available ? "Available" : "Coming soon"}
       </span>
+    </>
+  );
+}
+
+function ServiceCard({
+  name,
+  available,
+}: {
+  name: string;
+  available: boolean;
+}) {
+  const base =
+    "relative flex items-center gap-4 rounded-2xl border p-4 shadow-sm transition";
+
+  if (available) {
+    return (
+      <Link
+        href={`/customer/jobs/new?service=${encodeURIComponent(getCategory(name))}`}
+        className={`${base} border-slate-200 bg-white hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+      >
+        <ServiceCardInner name={name} available />
+      </Link>
+    );
+  }
+
+  return (
+    <div className={`${base} border-slate-200 bg-slate-50`}>
+      <ServiceCardInner name={name} available={false} />
     </div>
   );
 }
@@ -186,7 +242,8 @@ export default function ServicesPage() {
               Available services
             </h2>
             <p className="mt-2 text-slate-600">
-              Services you can request from local vendors today.
+              Request bids from local independent vendors, small crews, and growing
+              service businesses near you.
             </p>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -197,8 +254,28 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Coming soon */}
+      {/* Built for local work */}
       <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-16">
+          <div className="rounded-3xl border border-emerald-100 bg-emerald-50/60 p-8 sm:p-10">
+            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+              Built for local work
+            </span>
+            <h2 className="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              A fair place for local vendors to earn work
+            </h2>
+            <p className="mt-3 max-w-3xl text-base text-slate-600">
+              EZ Bid helps homeowners connect with independent service providers,
+              small crews, and growing local businesses. Whether someone is starting
+              with a lawn mower or building a full service company, EZ Bid gives local
+              vendors a fair place to earn work and build reviews.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Coming soon */}
+      <section className="bg-slate-50">
         <div className="mx-auto max-w-6xl px-4 py-16">
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900">
