@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import type { UserRole } from "@prisma/client";
+import { AuthConfigurationError } from "@/lib/services/errors";
 
 export const COOKIE_NAME = "ez_bid_session";
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
@@ -11,11 +12,14 @@ export interface SessionPayload {
 }
 
 function getSecret(): Uint8Array {
-  const secret = process.env.AUTH_SECRET;
+  const secret = process.env.AUTH_SECRET?.trim();
   if (!secret || secret.length < 16) {
-    throw new Error(
-      "AUTH_SECRET is missing or too short. Set a long random value in your .env file."
+    console.error(
+      "[auth:session]",
+      "AuthConfigurationError",
+      "AUTH_SECRET missing or too short"
     );
+    throw new AuthConfigurationError();
   }
   return new TextEncoder().encode(secret);
 }

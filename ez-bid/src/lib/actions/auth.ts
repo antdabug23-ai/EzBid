@@ -9,7 +9,7 @@ import {
 import { authenticate, registerCustomer, registerVendor } from "@/lib/services/auth";
 import { createSession, destroySession } from "@/lib/auth/session";
 import { dashboardPathForRole } from "@/lib/auth/current-user";
-import { type FormState, toErrorState } from "./form-state";
+import { type FormState, toErrorState, UNABLE_TO_SIGN_IN } from "./form-state";
 
 export async function loginAction(_prev: FormState, formData: FormData): Promise<FormState> {
   let redirectTo: string | null = null;
@@ -23,10 +23,10 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
     await createSession({ userId: user.id, role: user.role });
     redirectTo = dashboardPathForRole(user.role);
   } catch (err) {
-    return toErrorState(err);
+    return toErrorState(err, "login");
   }
   if (redirectTo) redirect(redirectTo);
-  return { ok: false, error: "Something went wrong. Please try again." };
+  return { ok: false, error: UNABLE_TO_SIGN_IN };
 }
 
 export async function customerSignupAction(
@@ -38,7 +38,7 @@ export async function customerSignupAction(
     const user = await registerCustomer(parsed);
     await createSession({ userId: user.id, role: user.role });
   } catch (err) {
-    return toErrorState(err);
+    return toErrorState(err, "customerSignup");
   }
   redirect("/customer/dashboard");
 }
@@ -52,7 +52,7 @@ export async function vendorSignupAction(
     const user = await registerVendor(parsed);
     await createSession({ userId: user.id, role: user.role });
   } catch (err) {
-    return toErrorState(err);
+    return toErrorState(err, "vendorSignup");
   }
   redirect("/vendor/dashboard");
 }

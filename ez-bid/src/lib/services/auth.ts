@@ -1,11 +1,19 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import type { CustomerSignupInput, VendorSignupInput } from "@/lib/validations/auth";
-import { ServiceError } from "./errors";
+import { DUPLICATE_EMAIL_MESSAGE, ServiceError } from "./errors";
 
 async function assertEmailAvailable(email: string) {
   const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) throw new ServiceError("An account with that email already exists.");
+  if (existing) throw new ServiceError(DUPLICATE_EMAIL_MESSAGE);
+}
+
+function rethrowDuplicateEmail(err: unknown): never {
+  if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+    throw new ServiceError(DUPLICATE_EMAIL_MESSAGE);
+  }
+  throw err;
 }
 
 export async function registerCustomer(input: CustomerSignupInput) {
@@ -13,22 +21,26 @@ export async function registerCustomer(input: CustomerSignupInput) {
   await assertEmailAvailable(email);
   const passwordHash = await hashPassword(input.password);
 
-  return prisma.user.create({
-    data: {
-      email,
-      passwordHash,
-      role: "CUSTOMER",
-      customerProfile: {
-        create: {
-          firstName: input.firstName,
-          lastName: input.lastName,
-          phone: input.phone || null,
-          town: input.town || null,
-          state: input.state || null,
+  try {
+    return await prisma.user.create({
+      data: {
+        email,
+        passwordHash,
+        role: "CUSTOMER",
+        customerProfile: {
+          create: {
+            firstName: input.firstName.trim(),
+            lastName: input.lastName.trim(),
+            phone: input.phone?.trim() || null,
+            town: input.town?.trim() || null,
+            state: input.state?.trim() || null,
+          },
         },
       },
-    },
-  });
+    });
+  } catch (err) {
+    rethrowDuplicateEmail(err);
+  }
 }
 
 export async function registerVendor(input: VendorSignupInput) {
@@ -36,22 +48,26 @@ export async function registerVendor(input: VendorSignupInput) {
   await assertEmailAvailable(email);
   const passwordHash = await hashPassword(input.password);
 
-  return prisma.user.create({
-    data: {
-      email,
-      passwordHash,
-      role: "VENDOR",
-      vendorProfile: {
-        create: {
-          businessName: input.businessName,
-          phone: input.phone || null,
-          email,
-          town: input.town || null,
-          state: input.state || null,
+  try {
+    return await prisma.user.create({
+      data: {
+        email,
+        passwordHash,
+        role: "VENDOR",
+        vendorProfile: {
+          create: {
+            businessName: input.businessName.trim(),
+            phone: input.phone?.trim() || null,
+            email,
+            town: input.town?.trim() || null,
+            state: input.state?.trim() || null,
+          },
         },
       },
-    },
-  });
+    });
+  } catch (err) {
+    rethrowDuplicateEmail(err);
+  }
 }
 
 /** Verify credentials. Returns the user or null (no info leak on which failed). */
