@@ -7,6 +7,8 @@ export interface FormState {
   error?: string;
   message?: string;
   fieldErrors?: Record<string, string[]>;
+  /** Safe (non-secret) submitted values, echoed back to repopulate a form after an error. */
+  values?: Record<string, string>;
 }
 
 export const initialFormState: FormState = { ok: false };
