@@ -132,12 +132,15 @@ export async function listVendorBids(vendorProfileId: string) {
   });
 }
 
+export type RatingBreakdown = Record<1 | 2 | 3 | 4 | 5, number>;
+
 /**
  * Public vendor profile (safe fields only).
  * Never selects vendor documents, work files, internal notes, phone, or email.
+ * Returns a real star breakdown computed from Review records, or null if no vendor.
  */
 export async function getPublicVendorProfile(vendorId: string) {
-  return prisma.vendorProfile.findUnique({
+  const vendor = await prisma.vendorProfile.findUnique({
     where: { id: vendorId },
     select: {
       id: true,
@@ -162,10 +165,27 @@ export async function getPublicVendorProfile(vendorId: string) {
           writtenReview: true,
           createdAt: true,
           customer: { select: { firstName: true, lastName: true } },
+          job: { select: { serviceCategory: { select: { name: true } } } },
         },
       },
     },
   });
+
+  if (!vendor) return null;
+
+  const grouped = await prisma.review.groupBy({
+    by: ["overallRating"],
+    where: { vendorId },
+    _count: { _all: true },
+  });
+
+  const breakdown: RatingBreakdown = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  for (const row of grouped) {
+    const star = Math.min(5, Math.max(1, Math.round(row.overallRating))) as 1 | 2 | 3 | 4 | 5;
+    breakdown[star] += row._count._all;
+  }
+
+  return { ...vendor, breakdown };
 }
 
 /** Counts for the vendor dashboard stat cards. */

@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { StarRating } from "@/components/ui/star-rating";
 import { BidStatusBadge } from "@/components/ui/status-badge";
 
 export const metadata: Metadata = {
@@ -113,6 +114,9 @@ export default async function VendorDashboardPage() {
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-xl font-bold text-slate-900">{profile.businessName}</h1>
                   <Badge tone="green">Free during beta</Badge>
+                </div>
+                <div className="mt-1">
+                  <StarRating rating={profile.averageRating} count={profile.reviewCount} />
                 </div>
                 <dl className="mt-2 grid gap-x-8 gap-y-1 text-sm sm:grid-cols-2">
                   <div className="flex gap-2">
