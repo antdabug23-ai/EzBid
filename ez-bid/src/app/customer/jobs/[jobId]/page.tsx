@@ -8,6 +8,7 @@ import { LogoutButton } from "@/components/auth/LogoutButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { StarRating } from "@/components/ui/star-rating";
 import { JobStatusBadge, BidStatusBadge } from "@/components/ui/status-badge";
 
 export const metadata: Metadata = {
@@ -147,15 +148,24 @@ export default async function JobDetailPage({
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="font-semibold text-slate-900">
-                            {bid.vendor.businessName}
-                          </h3>
+                          <Link
+                            href={`/vendors/${bid.vendor.id}`}
+                            className="font-semibold text-blue-600 hover:underline"
+                          >
+                            {bid.vendor.businessName || "Vendor Profile"}
+                          </Link>
                           <BidStatusBadge status={bid.status} />
                           {bid.vendor.town && bid.vendor.state ? (
                             <Badge tone="neutral">
                               {bid.vendor.town}, {bid.vendor.state}
                             </Badge>
                           ) : null}
+                        </div>
+                        <div className="mt-1">
+                          <StarRating
+                            rating={bid.vendor.averageRating}
+                            count={bid.vendor.reviewCount}
+                          />
                         </div>
                         <p className="mt-1 text-xs text-slate-400">
                           Submitted {formatDate(bid.createdAt)}
@@ -184,7 +194,7 @@ export default async function JobDetailPage({
                     ) : null}
 
                     <div className="mt-4">
-                      <Link href={`/customer/jobs/${job.id}`}>
+                      <Link href={`/customer/jobs/${job.id}/bids/${bid.id}`}>
                         <Button variant="outline" size="sm">
                           Review Bid
                         </Button>

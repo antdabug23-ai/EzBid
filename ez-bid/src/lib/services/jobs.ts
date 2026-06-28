@@ -70,7 +70,9 @@ export async function listCustomerJobs(customerProfileId: string) {
           id: true,
           amount: true,
           status: true,
-          vendor: { select: { businessName: true } },
+          vendor: {
+            select: { id: true, businessName: true, averageRating: true, reviewCount: true },
+          },
         },
       },
     },
@@ -128,12 +130,56 @@ export async function listBidsForCustomerJob(customerProfileId: string, jobId: s
       createdAt: true,
       vendor: {
         select: {
+          id: true,
           businessName: true,
           town: true,
           state: true,
           verificationStatus: true,
+          averageRating: true,
+          reviewCount: true,
         },
       },
     },
   });
+}
+
+/**
+ * Fetch a single bid on a customer's own job (full detail).
+ * Returns null if the bid/job is missing or not owned by this customer.
+ * Selects safe vendor fields only.
+ */
+export async function getCustomerBid(
+  customerProfileId: string,
+  jobId: string,
+  bidId: string
+) {
+  const bid = await prisma.bid.findUnique({
+    where: { id: bidId },
+    select: {
+      id: true,
+      jobId: true,
+      amount: true,
+      description: true,
+      proposedServiceDate: true,
+      estimatedTimeline: true,
+      status: true,
+      createdAt: true,
+      job: { select: { title: true, customerId: true } },
+      vendor: {
+        select: {
+          id: true,
+          businessName: true,
+          town: true,
+          state: true,
+          averageRating: true,
+          reviewCount: true,
+        },
+      },
+    },
+  });
+
+  if (!bid || bid.jobId !== jobId || bid.job.customerId !== customerProfileId) {
+    return null;
+  }
+  return bid;
 }

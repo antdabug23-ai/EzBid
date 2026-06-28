@@ -132,6 +132,42 @@ export async function listVendorBids(vendorProfileId: string) {
   });
 }
 
+/**
+ * Public vendor profile (safe fields only).
+ * Never selects vendor documents, work files, internal notes, phone, or email.
+ */
+export async function getPublicVendorProfile(vendorId: string) {
+  return prisma.vendorProfile.findUnique({
+    where: { id: vendorId },
+    select: {
+      id: true,
+      businessName: true,
+      description: true,
+      serviceAreaDescription: true,
+      town: true,
+      state: true,
+      averageRating: true,
+      reviewCount: true,
+      verificationStatus: true,
+      createdAt: true,
+      serviceCategories: {
+        select: { serviceCategory: { select: { name: true } } },
+      },
+      reviews: {
+        orderBy: { createdAt: "desc" },
+        take: 10,
+        select: {
+          id: true,
+          overallRating: true,
+          writtenReview: true,
+          createdAt: true,
+          customer: { select: { firstName: true, lastName: true } },
+        },
+      },
+    },
+  });
+}
+
 /** Counts for the vendor dashboard stat cards. */
 export async function getVendorStats(vendorProfileId: string) {
   const [availableJobs, bidsSubmitted, jobsWon, completedJobs] = await Promise.all([

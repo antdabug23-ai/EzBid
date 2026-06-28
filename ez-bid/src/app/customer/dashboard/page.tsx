@@ -255,7 +255,16 @@ export default async function CustomerDashboardPage() {
                                 key={bid.id}
                                 className="flex items-center justify-between text-xs text-slate-600"
                               >
-                                <span className="truncate">{bid.vendor.businessName}</span>
+                                <span className="min-w-0 truncate">
+                                  {bid.vendor.businessName}
+                                  {bid.vendor.reviewCount > 0 ? (
+                                    <span className="ml-1 text-amber-600">
+                                      {"\u2605"} {bid.vendor.averageRating.toFixed(1)}
+                                    </span>
+                                  ) : (
+                                    <span className="ml-1 text-slate-400">· New</span>
+                                  )}
+                                </span>
                                 <span className="ml-2 shrink-0 font-medium text-slate-800">
                                   ${bid.amount.toLocaleString()}
                                 </span>
