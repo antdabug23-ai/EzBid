@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { requireVendor } from "@/lib/auth/current-user";
 import { listVendorBids, getVendorStats } from "@/lib/services/vendor";
-import { LogoutButton } from "@/components/auth/LogoutButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -89,19 +88,6 @@ export default async function VendorDashboardPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-lg font-bold text-slate-900">
-              EZ Bid
-            </Link>
-            <span className="hidden text-slate-300 sm:inline">/</span>
-            <p className="hidden text-sm text-slate-500 sm:block">Vendor dashboard</p>
-          </div>
-          <LogoutButton />
-        </div>
-      </header>
-
       <main className="mx-auto max-w-6xl space-y-6 px-4 py-8">
         {/* Profile summary */}
         <Card>

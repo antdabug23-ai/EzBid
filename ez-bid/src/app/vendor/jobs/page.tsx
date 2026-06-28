@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import type { UrgencyLevel } from "@prisma/client";
 import { requireVendor } from "@/lib/auth/current-user";
 import { listAvailableJobs } from "@/lib/services/vendor";
-import { LogoutButton } from "@/components/auth/LogoutButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -48,21 +47,6 @@ export default async function VendorJobsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-lg font-bold text-slate-900">
-              EZ Bid
-            </Link>
-            <span className="hidden text-slate-300 sm:inline">/</span>
-            <Link href="/vendor/dashboard" className="hidden text-sm text-slate-500 hover:text-slate-700 sm:block">
-              Dashboard
-            </Link>
-          </div>
-          <LogoutButton />
-        </div>
-      </header>
-
       <main className="mx-auto max-w-5xl px-4 py-8">
         <div className="mb-6">
           <Link href="/vendor/dashboard" className="text-sm text-slate-500 hover:text-slate-700">

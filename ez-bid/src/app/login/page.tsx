@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Card, CardContent } from "@/components/ui/card";
 import { LoginForm } from "@/components/auth/LoginForm";
@@ -18,7 +17,6 @@ export default async function LoginPage({
 
   return (
     <div className="min-h-screen w-full bg-white text-slate-900">
-      <SiteHeader />
       <main className="mx-auto max-w-md px-4 py-16">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-slate-900">Log in to EZ Bid</h1>

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Card, CardContent } from "@/components/ui/card";
 import { CustomerSignupForm } from "@/components/auth/CustomerSignupForm";
@@ -13,7 +12,6 @@ export const metadata: Metadata = {
 export default function CustomerSignupPage() {
   return (
     <div className="min-h-screen w-full bg-white text-slate-900">
-      <SiteHeader />
       <main className="mx-auto max-w-lg px-4 py-16">
         <div className="mb-6 text-center">
           <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">

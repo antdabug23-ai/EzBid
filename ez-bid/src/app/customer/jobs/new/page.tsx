@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { requireCustomer } from "@/lib/auth/current-user";
-import { LogoutButton } from "@/components/auth/LogoutButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { NewJobForm } from "@/components/jobs/NewJobForm";
 
@@ -14,21 +13,6 @@ export default async function NewJobPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-lg font-bold text-slate-900">
-              EZ Bid
-            </Link>
-            <span className="hidden text-slate-300 sm:inline">/</span>
-            <Link href="/customer/dashboard" className="hidden text-sm text-slate-500 hover:text-slate-700 sm:block">
-              Dashboard
-            </Link>
-          </div>
-          <LogoutButton />
-        </div>
-      </header>
-
       <main className="mx-auto max-w-3xl px-4 py-8">
         <div className="mb-6">
           <Link

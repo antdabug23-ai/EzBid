@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getPublicVendorProfile } from "@/lib/services/vendor";
-import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -54,7 +53,6 @@ export default async function VendorProfilePage({
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
-      <SiteHeader />
       <main className="mx-auto max-w-3xl space-y-6 px-4 py-10">
         {/* Identity */}
         <Card>

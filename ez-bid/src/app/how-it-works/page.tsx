@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 
 export const metadata: Metadata = {
@@ -98,7 +97,6 @@ function StepList({
 export default function HowItWorksPage() {
   return (
     <div className="min-h-screen w-full bg-white text-slate-900">
-      <SiteHeader />
 
       {/* Hero */}
       <section className="bg-white">

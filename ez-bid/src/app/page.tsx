@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 
 export const metadata: Metadata = {
@@ -95,9 +94,6 @@ const steps = [
 export default function HomePage() {
   return (
     <div className="min-h-screen w-full bg-white text-slate-900">
-      {/* Header / Navigation */}
-      <SiteHeader />
-
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:py-24">
