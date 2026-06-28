@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
 
 export const metadata: Metadata = {
   title: "EZ Bid — Find trusted local service vendors faster",
@@ -90,70 +92,11 @@ const steps = [
   },
 ];
 
-function Logo({ className = "" }: { className?: string }) {
-  return (
-    <span className={`flex items-center gap-2 ${className}`}>
-      <svg
-        viewBox="0 0 24 24"
-        className="h-7 w-7 text-blue-600"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden
-      >
-        <path d="M3 11.5 12 4l9 7.5" />
-        <path d="M5 10v9h14v-9" />
-        <path d="M9.5 19v-4h5v4" />
-      </svg>
-      <span className="text-xl font-extrabold tracking-tight text-slate-900">
-        EZ <span className="text-blue-600">BID</span>
-      </span>
-    </span>
-  );
-}
-
 export default function HomePage() {
   return (
     <div className="min-h-screen w-full bg-white text-slate-900">
       {/* Header / Navigation */}
-      <header className="sticky top-0 z-30 border-b border-slate-100 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <Logo />
-          <nav className="hidden items-center gap-7 text-sm font-medium text-slate-600 md:flex">
-            <a href="#how-it-works" className="hover:text-blue-600">
-              How It Works
-            </a>
-            <a href="#services" className="hover:text-blue-600">
-              Services
-            </a>
-            <a href="#for-customers" className="hover:text-blue-600">
-              For Customers
-            </a>
-            <a href="#for-vendors" className="hover:text-blue-600">
-              For Vendors
-            </a>
-            <a href="#about" className="hover:text-blue-600">
-              About Us
-            </a>
-          </nav>
-          <div className="flex items-center gap-2">
-            <a
-              href="/login"
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-600"
-            >
-              Log In
-            </a>
-            <a
-              href="/signup"
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
-            >
-              Sign Up
-            </a>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* Hero */}
       <section className="relative overflow-hidden">
@@ -466,82 +409,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer id="about" className="bg-slate-900 text-slate-300">
-        <div className="mx-auto max-w-6xl px-4 py-12">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <Logo className="[&_span]:text-white" />
-              <p className="mt-4 max-w-xs text-sm text-slate-400">
-                Connecting customers with trusted local service vendors for home
-                and property projects.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-white">For Customers</h4>
-              <ul className="mt-4 space-y-2 text-sm text-slate-400">
-                <li>
-                  <a href="/signup" className="hover:text-white">
-                    Post a Job
-                  </a>
-                </li>
-                <li>
-                  <a href="#how-it-works" className="hover:text-white">
-                    How It Works
-                  </a>
-                </li>
-                <li>
-                  <a href="#services" className="hover:text-white">
-                    Browse Services
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-white">For Vendors</h4>
-              <ul className="mt-4 space-y-2 text-sm text-slate-400">
-                <li>
-                  <a href="/signup" className="hover:text-white">
-                    Join as a Vendor
-                  </a>
-                </li>
-                <li>
-                  <a href="#for-vendors" className="hover:text-white">
-                    Vendor Benefits
-                  </a>
-                </li>
-                <li>
-                  <a href="#how-it-works" className="hover:text-white">
-                    How It Works
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-white">Company</h4>
-              <ul className="mt-4 space-y-2 text-sm text-slate-400">
-                <li>
-                  <a href="#about" className="hover:text-white">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#about" className="hover:text-white">
-                    Contact Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#about" className="hover:text-white">
-                    Privacy Policy
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-10 border-t border-slate-800 pt-6 text-center text-xs text-slate-500">
-            © 2026 EZ Bid. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
