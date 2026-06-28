@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { getCurrentUser, dashboardPathForRole } from "@/lib/auth/current-user";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
@@ -24,7 +26,9 @@ export function Logo({ className = "" }: { className?: string }) {
   );
 }
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const user = await getCurrentUser();
+
   return (
     <header className="sticky top-0 z-30 border-b border-slate-100 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -49,18 +53,32 @@ export function SiteHeader() {
           </Link>
         </nav>
         <div className="flex items-center gap-2">
-          <a
-            href="/login"
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-600"
-          >
-            Log In
-          </a>
-          <a
-            href="/signup"
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
-          >
-            Sign Up
-          </a>
+          {user ? (
+            <>
+              <Link
+                href={dashboardPathForRole(user.role)}
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+              >
+                Dashboard
+              </Link>
+              <LogoutButton />
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-600"
+              >
+                Log In
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
