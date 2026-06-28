@@ -1,11 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { requireCustomer } from "@/lib/auth/current-user";
+import { listCustomerJobs } from "@/lib/services/jobs";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { JobStatusBadge } from "@/components/ui/status-badge";
 
 export const metadata: Metadata = {
   title: "Customer dashboard — EZ Bid",
@@ -24,17 +26,19 @@ const SERVICES = [
   "HVAC",
 ];
 
-const STATS = [
-  { label: "Open Jobs", value: 0 },
-  { label: "Bids Received", value: 0 },
-  { label: "Jobs In Progress", value: 0 },
-  { label: "Completed Jobs", value: 0 },
-];
-
 function formatMemberSince(date: Date | null | undefined): string | null {
   if (!date) return null;
   return new Date(date).toLocaleDateString("en-US", {
     month: "long",
+    year: "numeric",
+  });
+}
+
+function formatShortDate(date: Date | null | undefined): string {
+  if (!date) return "Flexible";
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
     year: "numeric",
   });
 }
@@ -69,6 +73,7 @@ function CheckItem({ label, done }: { label: string; done: boolean }) {
 
 export default async function CustomerDashboardPage() {
   const { user, profile } = await requireCustomer();
+  const jobs = await listCustomerJobs(profile.id);
 
   const fullName = `${profile.firstName} ${profile.lastName}`.trim();
   const hasPhone = Boolean(profile.phone);
@@ -80,8 +85,16 @@ export default async function CustomerDashboardPage() {
     { label: "Create customer account", done: true },
     { label: "Add phone number", done: hasPhone },
     { label: "Add town and state", done: hasLocation },
-    { label: "Post first job", done: false },
+    { label: "Post first job", done: jobs.length > 0 },
     { label: "Review your first vendor", done: false },
+  ];
+
+  const bidsReceived = jobs.reduce((sum, job) => sum + job._count.bids, 0);
+  const stats = [
+    { label: "Open Jobs", value: jobs.filter((j) => j.status === "OPEN" || j.status === "BIDDING").length },
+    { label: "Bids Received", value: bidsReceived },
+    { label: "Jobs In Progress", value: jobs.filter((j) => j.status === "IN_PROGRESS" || j.status === "ACCEPTED").length },
+    { label: "Completed Jobs", value: jobs.filter((j) => j.status === "COMPLETED").length },
   ];
 
   return (
@@ -161,20 +174,17 @@ export default async function CustomerDashboardPage() {
                 </p>
               </div>
               <div>
-                <Button
-                  className="bg-white text-blue-700 hover:bg-blue-50"
-                  disabled
-                  title="Available soon"
-                >
-                  Post a Job
-                </Button>
-                <p className="mt-2 text-xs text-blue-100">Available soon</p>
+                <Link href="/customer/jobs/new">
+                  <Button className="bg-white text-blue-700 hover:bg-blue-50">
+                    Post a Job
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
 
           <div className="grid grid-cols-2 gap-4 lg:col-span-2">
-            {STATS.map((stat) => (
+            {stats.map((stat) => (
               <Card key={stat.label}>
                 <CardContent className="pt-6">
                   <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
@@ -189,17 +199,54 @@ export default async function CustomerDashboardPage() {
         <Card>
           <CardHeader className="flex items-center justify-between">
             <CardTitle>My Jobs</CardTitle>
+            {jobs.length > 0 ? (
+              <Link href="/customer/jobs/new">
+                <Button size="sm">Post a Job</Button>
+              </Link>
+            ) : null}
           </CardHeader>
           <CardContent className="pt-5">
-            <EmptyState
-              title="No jobs yet"
-              description="You have not posted any jobs yet. Post your first job to start receiving bids from local vendors."
-              action={
-                <Button disabled title="Available soon">
-                  Post your first job
-                </Button>
-              }
-            />
+            {jobs.length === 0 ? (
+              <EmptyState
+                title="No jobs yet"
+                description="You have not posted any jobs yet. Post your first job to start receiving bids from local vendors."
+                action={
+                  <Link href="/customer/jobs/new">
+                    <Button>Post your first job</Button>
+                  </Link>
+                }
+              />
+            ) : (
+              <ul className="space-y-3">
+                {jobs.map((job) => (
+                  <li
+                    key={job.id}
+                    className="flex flex-col gap-3 rounded-lg border border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="truncate font-semibold text-slate-900">{job.title}</h3>
+                        <JobStatusBadge status={job.status} />
+                      </div>
+                      <p className="mt-1 text-sm text-slate-500">
+                        {job.serviceCategory.name} &middot; {job.town}, {job.state}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-400">
+                        Service date: {formatShortDate(job.requestedServiceDate)} &middot; Bids:{" "}
+                        {job._count.bids} &middot; Posted {formatShortDate(job.createdAt)}
+                      </p>
+                    </div>
+                    <div className="shrink-0">
+                      <Link href={`/customer/jobs/${job.id}`}>
+                        <Button variant="outline" size="sm">
+                          View Job
+                        </Button>
+                      </Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </CardContent>
         </Card>
 

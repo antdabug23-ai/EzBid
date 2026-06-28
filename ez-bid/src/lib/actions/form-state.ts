@@ -61,10 +61,16 @@ export function zodToFieldErrors(error: ZodError): Record<string, string[]> {
   return out;
 }
 
-export function toErrorState(err: unknown, context = "form"): FormState {
+export function toErrorState(
+  err: unknown,
+  context = "form",
+  fallbackMessage?: string
+): FormState {
   if (isNextRedirect(err)) throw err;
 
   logAuthError(context, err);
+
+  const unable = fallbackMessage ?? unableMessage(context);
 
   if (err instanceof ZodError) {
     const fieldErrors = zodToFieldErrors(err);
@@ -81,14 +87,14 @@ export function toErrorState(err: unknown, context = "form"): FormState {
   }
 
   if (err instanceof AuthConfigurationError) {
-    return { ok: false, error: unableMessage(context) };
+    return { ok: false, error: unable };
   }
 
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === "P2002" && isDuplicateEmailError(err)) {
       return { ok: false, error: DUPLICATE_EMAIL_MESSAGE };
     }
-    return { ok: false, error: unableMessage(context) };
+    return { ok: false, error: unable };
   }
 
   if (
@@ -96,8 +102,8 @@ export function toErrorState(err: unknown, context = "form"): FormState {
     err instanceof Prisma.PrismaClientRustPanicError ||
     err instanceof Prisma.PrismaClientValidationError
   ) {
-    return { ok: false, error: unableMessage(context) };
+    return { ok: false, error: unable };
   }
 
-  return { ok: false, error: unableMessage(context) };
+  return { ok: false, error: unable };
 }
