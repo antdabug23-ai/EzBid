@@ -3,10 +3,12 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import type { UrgencyLevel } from "@prisma/client";
 import { requireCustomer } from "@/lib/auth/current-user";
-import { getCustomerJob } from "@/lib/services/jobs";
+import { getCustomerJob, listBidsForCustomerJob } from "@/lib/services/jobs";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { JobStatusBadge } from "@/components/ui/status-badge";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { JobStatusBadge, BidStatusBadge } from "@/components/ui/status-badge";
 
 export const metadata: Metadata = {
   title: "Job details — EZ Bid",
@@ -54,6 +56,8 @@ export default async function JobDetailPage({
   const job = await getCustomerJob(profile.id, jobId);
 
   if (!job) notFound();
+
+  const bids = (await listBidsForCustomerJob(profile.id, jobId)) ?? [];
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -122,6 +126,78 @@ export default async function JobDetailPage({
             Your exact address and contact information stay private until you choose a vendor and
             the job is confirmed. Only your approximate location ({job.town}, {job.state}) is
             shared with vendors during bidding.
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex items-center justify-between">
+            <CardTitle>
+              Bids Received{bids.length > 0 ? ` (${bids.length})` : ""}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-5">
+            {bids.length === 0 ? (
+              <p className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
+                No bids have been submitted yet. Vendors will appear here once they bid on your job.
+              </p>
+            ) : (
+              <ul className="space-y-3">
+                {bids.map((bid) => (
+                  <li key={bid.id} className="rounded-lg border border-slate-200 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-semibold text-slate-900">
+                            {bid.vendor.businessName}
+                          </h3>
+                          <BidStatusBadge status={bid.status} />
+                          {bid.vendor.town && bid.vendor.state ? (
+                            <Badge tone="neutral">
+                              {bid.vendor.town}, {bid.vendor.state}
+                            </Badge>
+                          ) : null}
+                        </div>
+                        <p className="mt-1 text-xs text-slate-400">
+                          Submitted {formatDate(bid.createdAt)}
+                        </p>
+                      </div>
+                      <p className="shrink-0 text-lg font-bold text-slate-900">
+                        ${bid.amount.toLocaleString()}
+                      </p>
+                    </div>
+
+                    <dl className="mt-3 grid gap-x-8 gap-y-1 text-sm sm:grid-cols-2">
+                      <div className="flex gap-2">
+                        <dt className="text-slate-500">Estimated start:</dt>
+                        <dd className="text-slate-800">{formatDate(bid.proposedServiceDate)}</dd>
+                      </div>
+                      <div className="flex gap-2">
+                        <dt className="text-slate-500">Completion time:</dt>
+                        <dd className="text-slate-800">{bid.estimatedTimeline ?? "—"}</dd>
+                      </div>
+                    </dl>
+
+                    {bid.description ? (
+                      <p className="mt-3 whitespace-pre-line text-sm text-slate-600">
+                        {bid.description}
+                      </p>
+                    ) : null}
+
+                    <div className="mt-4">
+                      <Link href={`/customer/jobs/${job.id}`}>
+                        <Button variant="outline" size="sm">
+                          Review Bid
+                        </Button>
+                      </Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <p className="mt-4 text-xs text-slate-400">
+              Vendor selection and final confirmation will be added in the next phase.
+            </p>
           </CardContent>
         </Card>
       </main>

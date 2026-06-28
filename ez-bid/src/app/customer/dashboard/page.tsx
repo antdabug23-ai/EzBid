@@ -221,9 +221,9 @@ export default async function CustomerDashboardPage() {
                 {jobs.map((job) => (
                   <li
                     key={job.id}
-                    className="flex flex-col gap-3 rounded-lg border border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between"
+                    className="flex flex-col gap-3 rounded-lg border border-slate-200 p-4 sm:flex-row sm:items-start sm:justify-between"
                   >
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="truncate font-semibold text-slate-900">{job.title}</h3>
                         <JobStatusBadge status={job.status} />
@@ -232,9 +232,43 @@ export default async function CustomerDashboardPage() {
                         {job.serviceCategory.name} &middot; {job.town}, {job.state}
                       </p>
                       <p className="mt-1 text-xs text-slate-400">
-                        Service date: {formatShortDate(job.requestedServiceDate)} &middot; Bids:{" "}
-                        {job._count.bids} &middot; Posted {formatShortDate(job.createdAt)}
+                        Service date: {formatShortDate(job.requestedServiceDate)} &middot; Posted{" "}
+                        {formatShortDate(job.createdAt)}
                       </p>
+
+                      {job._count.bids === 0 ? (
+                        <p className="mt-2 text-xs text-slate-400">No bids yet</p>
+                      ) : (
+                        <div className="mt-3 rounded-md bg-slate-50 px-3 py-2">
+                          <p className="text-xs font-semibold text-slate-600">
+                            {job._count.bids} {job._count.bids === 1 ? "bid" : "bids"} received
+                            {job.bids[0] ? (
+                              <span className="font-normal text-slate-500">
+                                {" "}
+                                &middot; lowest ${job.bids[0].amount.toLocaleString()}
+                              </span>
+                            ) : null}
+                          </p>
+                          <ul className="mt-1 space-y-0.5">
+                            {job.bids.map((bid) => (
+                              <li
+                                key={bid.id}
+                                className="flex items-center justify-between text-xs text-slate-600"
+                              >
+                                <span className="truncate">{bid.vendor.businessName}</span>
+                                <span className="ml-2 shrink-0 font-medium text-slate-800">
+                                  ${bid.amount.toLocaleString()}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                          {job._count.bids > job.bids.length ? (
+                            <p className="mt-1 text-xs text-blue-600">
+                              + {job._count.bids - job.bids.length} more bids
+                            </p>
+                          ) : null}
+                        </div>
+                      )}
                     </div>
                     <div className="shrink-0">
                       <Link href={`/customer/jobs/${job.id}`}>

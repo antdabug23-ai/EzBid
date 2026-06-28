@@ -45,7 +45,10 @@ export async function createCustomerJob(customerProfileId: string, input: Create
   return job;
 }
 
-/** List the logged-in customer's own jobs (newest first). */
+/**
+ * List the logged-in customer's own jobs (newest first).
+ * Includes up to 3 lowest bid previews (safe vendor fields only) plus the total bid count.
+ */
 export async function listCustomerJobs(customerProfileId: string) {
   return prisma.job.findMany({
     where: { customerId: customerProfileId },
@@ -60,6 +63,16 @@ export async function listCustomerJobs(customerProfileId: string) {
       createdAt: true,
       serviceCategory: { select: { name: true } },
       _count: { select: { bids: true } },
+      bids: {
+        take: 3,
+        orderBy: { amount: "asc" },
+        select: {
+          id: true,
+          amount: true,
+          status: true,
+          vendor: { select: { businessName: true } },
+        },
+      },
     },
   });
 }
@@ -88,4 +101,39 @@ export async function getCustomerJob(customerProfileId: string, jobId: string) {
 
   if (!job || job.customerId !== customerProfileId) return null;
   return job;
+}
+
+/**
+ * List all bids on a customer's own job (lowest amount first).
+ * Returns null if the job is missing or not owned by this customer.
+ * Selects safe vendor fields only — never vendor documents or contact details.
+ */
+export async function listBidsForCustomerJob(customerProfileId: string, jobId: string) {
+  const job = await prisma.job.findUnique({
+    where: { id: jobId },
+    select: { customerId: true },
+  });
+  if (!job || job.customerId !== customerProfileId) return null;
+
+  return prisma.bid.findMany({
+    where: { jobId },
+    orderBy: { amount: "asc" },
+    select: {
+      id: true,
+      amount: true,
+      description: true,
+      proposedServiceDate: true,
+      estimatedTimeline: true,
+      status: true,
+      createdAt: true,
+      vendor: {
+        select: {
+          businessName: true,
+          town: true,
+          state: true,
+          verificationStatus: true,
+        },
+      },
+    },
+  });
 }
