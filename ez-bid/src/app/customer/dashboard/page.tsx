@@ -145,10 +145,19 @@ export default async function CustomerDashboardPage() {
                 </dl>
               </div>
             </div>
-            <div className="shrink-0">
-              <Button variant="outline" size="sm" disabled title="Available soon">
+            <div className="flex shrink-0 flex-col items-stretch gap-2 sm:items-end">
+              <Link
+                href="/customer/profile/edit"
+                className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-300 bg-white px-3 text-sm font-medium text-slate-800 transition-colors hover:bg-slate-50"
+              >
                 Edit Profile
-              </Button>
+              </Link>
+              <Link
+                href="/account/password"
+                className="text-center text-xs font-medium text-blue-600 hover:underline sm:text-right"
+              >
+                Change Password
+              </Link>
             </div>
           </CardContent>
         </Card>

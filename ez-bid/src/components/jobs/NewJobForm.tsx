@@ -83,6 +83,11 @@ export function NewJobForm({
         <FieldError message={fe?.description?.[0]} />
       </div>
 
+      <p className="text-xs text-slate-500">
+        Your saved general location is used to make posting jobs faster. You can change it for each
+        job.
+      </p>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="town" className={labelClass}>
