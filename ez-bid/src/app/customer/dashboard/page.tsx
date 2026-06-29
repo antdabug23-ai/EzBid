@@ -7,6 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { JobStatusBadge } from "@/components/ui/status-badge";
+import {
+  ServiceIllustration,
+  serviceTint,
+} from "@/components/services/ServiceIllustration";
 
 export const metadata: Metadata = {
   title: "Customer dashboard — EZ Bid",
@@ -312,15 +316,18 @@ export default async function CustomerDashboardPage() {
           <CardContent className="pt-5">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {SERVICES.map((service) => (
-                <div
+                <Link
                   key={service}
-                  className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-3"
+                  href={`/customer/jobs/new?service=${encodeURIComponent(service)}`}
+                  className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-3 transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-slate-100 text-sm font-semibold text-slate-600">
-                    {service.charAt(0)}
+                  <span
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${serviceTint(service)}`}
+                  >
+                    <ServiceIllustration name={service} className="h-7 w-7" />
                   </span>
                   <span className="text-sm font-medium text-slate-700">{service}</span>
-                </div>
+                </Link>
               ))}
             </div>
           </CardContent>

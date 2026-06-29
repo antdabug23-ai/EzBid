@@ -10,7 +10,7 @@ function Svg({ children }: { children: ReactNode }) {
   return (
     <svg
       viewBox="0 0 64 64"
-      className="h-12 w-12"
+      className="h-full w-full"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
@@ -430,19 +430,56 @@ const FALLBACK = (
   </Svg>
 );
 
+/**
+ * Some surfaces (e.g. the job categories / customer dashboard) use slightly
+ * different service names than the Services page. Map those to the canonical
+ * illustration key so the same visuals are reused everywhere.
+ */
+const NAME_ALIASES: Record<string, string> = {
+  "Lawn Mowing": "Lawn mowing",
+  "Power Washing": "Power washing",
+  Handyman: "Handyman services",
+  Electrical: "Electrical work",
+  "Tree Removal": "Tree removal",
+  "Junk Removal": "Junk removal",
+  "House Cleaning": "House cleaning",
+};
+
+function resolveName(name: string): string {
+  return NAME_ALIASES[name] ?? name;
+}
+
+// Soft tinted background per service (canonical keys), matching the Services page.
+const SERVICE_TINTS: Record<string, string> = {
+  Landscaping: "bg-emerald-50",
+  "Lawn mowing": "bg-lime-50",
+  "Power washing": "bg-blue-50",
+  "Handyman services": "bg-orange-50",
+  Plumbing: "bg-sky-50",
+  HVAC: "bg-cyan-50",
+  "Electrical work": "bg-amber-50",
+  "Junk removal": "bg-stone-100",
+  "House cleaning": "bg-violet-50",
+  "Tree removal": "bg-emerald-50",
+};
+
+export function serviceTint(name: string): string {
+  return SERVICE_TINTS[resolveName(name)] ?? "bg-slate-100";
+}
+
 export function ServiceIllustration({
   name,
   muted = false,
-  className,
+  className = "h-12 w-12",
 }: {
   name: string;
   muted?: boolean;
   className?: string;
 }) {
-  const art = ILLUSTRATIONS[name] ?? FALLBACK;
+  const art = ILLUSTRATIONS[resolveName(name)] ?? FALLBACK;
   return (
     <span
-      className={`inline-flex ${muted ? "opacity-50 grayscale" : ""} ${className ?? ""}`}
+      className={`inline-flex ${className} ${muted ? "opacity-50 grayscale" : ""}`}
     >
       {art}
     </span>
