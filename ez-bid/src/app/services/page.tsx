@@ -1,32 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Trees,
-  Sprout,
-  SprayCan,
-  Hammer,
-  Droplets,
-  AirVent,
-  Zap,
-  Trash2,
-  Sparkles,
-  Axe,
-  CloudRain,
-  Snowflake,
-  Paintbrush,
-  Construction,
-  Layers,
-  WashingMachine,
-  Truck,
-  Pickaxe,
-  Warehouse,
-  Leaf,
-  Package,
-  Waves,
-  PaintBucket,
-  Wrench,
-  type LucideIcon,
-} from "lucide-react";
 import { SiteFooter } from "@/components/site/SiteFooter";
 
 export const metadata: Metadata = {
@@ -35,36 +8,53 @@ export const metadata: Metadata = {
     "Browse the home, property, and small business services available on EZ Bid. Find local vendors for landscaping, handyman work, cleaning, and more.",
 };
 
-type ServiceVisual = { Icon: LucideIcon; tint: string };
+type ServiceVisual = { emoji: string; tint: string };
 
 const SERVICE_VISUALS: Record<string, ServiceVisual> = {
-  Landscaping: { Icon: Trees, tint: "bg-emerald-50 text-emerald-600" },
-  "Lawn mowing": { Icon: Sprout, tint: "bg-lime-50 text-lime-600" },
-  "Power washing": { Icon: SprayCan, tint: "bg-blue-50 text-blue-600" },
-  "Handyman services": { Icon: Hammer, tint: "bg-orange-50 text-orange-600" },
-  Plumbing: { Icon: Droplets, tint: "bg-sky-50 text-sky-600" },
-  HVAC: { Icon: AirVent, tint: "bg-cyan-50 text-cyan-600" },
-  "Electrical work": { Icon: Zap, tint: "bg-amber-50 text-amber-600" },
-  "Junk removal": { Icon: Trash2, tint: "bg-stone-100 text-stone-600" },
-  "House cleaning": { Icon: Sparkles, tint: "bg-violet-50 text-violet-600" },
-  "Tree removal": { Icon: Axe, tint: "bg-emerald-50 text-emerald-700" },
-  "Gutter cleaning": { Icon: CloudRain, tint: "bg-sky-50 text-sky-600" },
-  "Snow removal": { Icon: Snowflake, tint: "bg-blue-50 text-blue-500" },
-  Painting: { Icon: Paintbrush, tint: "bg-rose-50 text-rose-600" },
-  "Fence repair": { Icon: Construction, tint: "bg-amber-50 text-amber-700" },
-  "Deck repair": { Icon: Layers, tint: "bg-orange-50 text-orange-700" },
-  "Appliance installation": { Icon: WashingMachine, tint: "bg-slate-100 text-slate-600" },
-  "Moving help": { Icon: Truck, tint: "bg-indigo-50 text-indigo-600" },
-  "Small demolition": { Icon: Pickaxe, tint: "bg-stone-100 text-stone-600" },
-  "Garage cleanout": { Icon: Warehouse, tint: "bg-slate-100 text-slate-600" },
-  "Yard cleanup": { Icon: Leaf, tint: "bg-lime-50 text-lime-600" },
-  "Mulch installation": { Icon: Package, tint: "bg-amber-50 text-amber-700" },
-  "Pressure washing": { Icon: Waves, tint: "bg-blue-50 text-blue-600" },
-  "Driveway sealing": { Icon: PaintBucket, tint: "bg-zinc-100 text-zinc-700" },
+  // Available services
+  Landscaping: { emoji: "🌳", tint: "bg-emerald-50" },
+  "Lawn mowing": { emoji: "🌱", tint: "bg-lime-50" },
+  "Power washing": { emoji: "💦", tint: "bg-blue-50" },
+  "Handyman services": { emoji: "🛠️", tint: "bg-orange-50" },
+  Plumbing: { emoji: "🚰", tint: "bg-sky-50" },
+  HVAC: { emoji: "🌡️", tint: "bg-cyan-50" },
+  "Electrical work": { emoji: "⚡", tint: "bg-amber-50" },
+  "Junk removal": { emoji: "🗑️", tint: "bg-stone-100" },
+  "House cleaning": { emoji: "🧽", tint: "bg-violet-50" },
+  "Tree removal": { emoji: "🪓", tint: "bg-emerald-50" },
+  "Gutter cleaning": { emoji: "🪜", tint: "bg-sky-50" },
+  "Snow removal": { emoji: "❄️", tint: "bg-blue-50" },
+  Painting: { emoji: "🖌️", tint: "bg-rose-50" },
+  "Fence repair": { emoji: "🪵", tint: "bg-amber-50" },
+  "Deck repair": { emoji: "🪚", tint: "bg-orange-50" },
+  "Appliance installation": { emoji: "🔧", tint: "bg-slate-100" },
+  "Moving help": { emoji: "📦", tint: "bg-indigo-50" },
+  "Small demolition": { emoji: "🔨", tint: "bg-stone-100" },
+  "Garage cleanout": { emoji: "🧹", tint: "bg-slate-100" },
+  "Yard cleanup": { emoji: "🍂", tint: "bg-lime-50" },
+  "Mulch installation": { emoji: "🪴", tint: "bg-amber-50" },
+  "Pressure washing": { emoji: "🚿", tint: "bg-blue-50" },
+  "Driveway sealing": { emoji: "🛣️", tint: "bg-zinc-100" },
+  // Coming soon services
+  "Dog grooming": { emoji: "🐶", tint: "bg-amber-50" },
+  "Pet sitting": { emoji: "🐾", tint: "bg-orange-50" },
+  "Mobile car detailing": { emoji: "🚗", tint: "bg-blue-50" },
+  "Pool cleaning": { emoji: "🏊", tint: "bg-cyan-50" },
+  "Pest control": { emoji: "🐜", tint: "bg-lime-50" },
+  Roofing: { emoji: "🏠", tint: "bg-stone-100" },
+  Masonry: { emoji: "🧱", tint: "bg-orange-50" },
+  "Concrete work": { emoji: "🚧", tint: "bg-amber-50" },
+  "Window cleaning": { emoji: "🪟", tint: "bg-sky-50" },
+  "Carpet cleaning": { emoji: "🧼", tint: "bg-violet-50" },
+  Locksmith: { emoji: "🔑", tint: "bg-yellow-50" },
+  "Security camera installation": { emoji: "📹", tint: "bg-slate-100" },
+  "Smart home setup": { emoji: "🏡", tint: "bg-emerald-50" },
+  "Computer help": { emoji: "💻", tint: "bg-indigo-50" },
+  "Small engine repair": { emoji: "🔩", tint: "bg-zinc-100" },
 };
 
 function getVisual(name: string): ServiceVisual {
-  return SERVICE_VISUALS[name] ?? { Icon: Wrench, tint: "bg-slate-100 text-slate-500" };
+  return SERVICE_VISUALS[name] ?? { emoji: "🧰", tint: "bg-slate-100" };
 }
 
 // Maps a service card to a job-posting category. Categories must match the
@@ -151,16 +141,21 @@ function ServiceCardInner({
   name: string;
   available: boolean;
 }) {
-  const { Icon, tint } = getVisual(name);
+  const { emoji, tint } = getVisual(name);
 
   return (
     <>
       <span
         className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-xl ${
-          available ? tint : "bg-slate-200 text-slate-400"
+          available ? tint : "bg-slate-100"
         }`}
       >
-        <Icon className="h-8 w-8" strokeWidth={1.75} aria-hidden />
+        <span
+          className={`text-3xl leading-none ${available ? "" : "opacity-50 grayscale"}`}
+          aria-hidden
+        >
+          {emoji}
+        </span>
       </span>
 
       <span
