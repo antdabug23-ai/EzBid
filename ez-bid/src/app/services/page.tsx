@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { ServiceIllustration } from "@/components/services/ServiceIllustration";
 
 export const metadata: Metadata = {
   title: "Services — EZ Bid",
@@ -8,53 +9,52 @@ export const metadata: Metadata = {
     "Browse the home, property, and small business services available on EZ Bid. Find local vendors for landscaping, handyman work, cleaning, and more.",
 };
 
-type ServiceVisual = { emoji: string; tint: string };
-
-const SERVICE_VISUALS: Record<string, ServiceVisual> = {
+// Soft tinted background behind each service illustration.
+const SERVICE_TINTS: Record<string, string> = {
   // Available services
-  Landscaping: { emoji: "🌳", tint: "bg-emerald-50" },
-  "Lawn mowing": { emoji: "🌱", tint: "bg-lime-50" },
-  "Power washing": { emoji: "💦", tint: "bg-blue-50" },
-  "Handyman services": { emoji: "🛠️", tint: "bg-orange-50" },
-  Plumbing: { emoji: "🚰", tint: "bg-sky-50" },
-  HVAC: { emoji: "🌡️", tint: "bg-cyan-50" },
-  "Electrical work": { emoji: "⚡", tint: "bg-amber-50" },
-  "Junk removal": { emoji: "🗑️", tint: "bg-stone-100" },
-  "House cleaning": { emoji: "🧽", tint: "bg-violet-50" },
-  "Tree removal": { emoji: "🪓", tint: "bg-emerald-50" },
-  "Gutter cleaning": { emoji: "🪜", tint: "bg-sky-50" },
-  "Snow removal": { emoji: "❄️", tint: "bg-blue-50" },
-  Painting: { emoji: "🖌️", tint: "bg-rose-50" },
-  "Fence repair": { emoji: "🪵", tint: "bg-amber-50" },
-  "Deck repair": { emoji: "🪚", tint: "bg-orange-50" },
-  "Appliance installation": { emoji: "🔧", tint: "bg-slate-100" },
-  "Moving help": { emoji: "📦", tint: "bg-indigo-50" },
-  "Small demolition": { emoji: "🔨", tint: "bg-stone-100" },
-  "Garage cleanout": { emoji: "🧹", tint: "bg-slate-100" },
-  "Yard cleanup": { emoji: "🍂", tint: "bg-lime-50" },
-  "Mulch installation": { emoji: "🪴", tint: "bg-amber-50" },
-  "Pressure washing": { emoji: "🚿", tint: "bg-blue-50" },
-  "Driveway sealing": { emoji: "🛣️", tint: "bg-zinc-100" },
+  Landscaping: "bg-emerald-50",
+  "Lawn mowing": "bg-lime-50",
+  "Power washing": "bg-blue-50",
+  "Handyman services": "bg-orange-50",
+  Plumbing: "bg-sky-50",
+  HVAC: "bg-cyan-50",
+  "Electrical work": "bg-amber-50",
+  "Junk removal": "bg-stone-100",
+  "House cleaning": "bg-violet-50",
+  "Tree removal": "bg-emerald-50",
+  "Gutter cleaning": "bg-sky-50",
+  "Snow removal": "bg-blue-50",
+  Painting: "bg-rose-50",
+  "Fence repair": "bg-amber-50",
+  "Deck repair": "bg-orange-50",
+  "Appliance installation": "bg-slate-100",
+  "Moving help": "bg-indigo-50",
+  "Small demolition": "bg-stone-100",
+  "Garage cleanout": "bg-slate-100",
+  "Yard cleanup": "bg-lime-50",
+  "Mulch installation": "bg-amber-50",
+  "Pressure washing": "bg-blue-50",
+  "Driveway sealing": "bg-zinc-100",
   // Coming soon services
-  "Dog grooming": { emoji: "🐶", tint: "bg-amber-50" },
-  "Pet sitting": { emoji: "🐾", tint: "bg-orange-50" },
-  "Mobile car detailing": { emoji: "🚗", tint: "bg-blue-50" },
-  "Pool cleaning": { emoji: "🏊", tint: "bg-cyan-50" },
-  "Pest control": { emoji: "🐜", tint: "bg-lime-50" },
-  Roofing: { emoji: "🏠", tint: "bg-stone-100" },
-  Masonry: { emoji: "🧱", tint: "bg-orange-50" },
-  "Concrete work": { emoji: "🚧", tint: "bg-amber-50" },
-  "Window cleaning": { emoji: "🪟", tint: "bg-sky-50" },
-  "Carpet cleaning": { emoji: "🧼", tint: "bg-violet-50" },
-  Locksmith: { emoji: "🔑", tint: "bg-yellow-50" },
-  "Security camera installation": { emoji: "📹", tint: "bg-slate-100" },
-  "Smart home setup": { emoji: "🏡", tint: "bg-emerald-50" },
-  "Computer help": { emoji: "💻", tint: "bg-indigo-50" },
-  "Small engine repair": { emoji: "🔩", tint: "bg-zinc-100" },
+  "Dog grooming": "bg-amber-50",
+  "Pet sitting": "bg-orange-50",
+  "Mobile car detailing": "bg-blue-50",
+  "Pool cleaning": "bg-cyan-50",
+  "Pest control": "bg-lime-50",
+  Roofing: "bg-stone-100",
+  Masonry: "bg-orange-50",
+  "Concrete work": "bg-amber-50",
+  "Window cleaning": "bg-sky-50",
+  "Carpet cleaning": "bg-violet-50",
+  Locksmith: "bg-yellow-50",
+  "Security camera installation": "bg-slate-100",
+  "Smart home setup": "bg-emerald-50",
+  "Computer help": "bg-indigo-50",
+  "Small engine repair": "bg-zinc-100",
 };
 
-function getVisual(name: string): ServiceVisual {
-  return SERVICE_VISUALS[name] ?? { emoji: "🧰", tint: "bg-slate-100" };
+function getTint(name: string): string {
+  return SERVICE_TINTS[name] ?? "bg-slate-100";
 }
 
 // Maps a service card to a job-posting category. Categories must match the
@@ -141,21 +141,16 @@ function ServiceCardInner({
   name: string;
   available: boolean;
 }) {
-  const { emoji, tint } = getVisual(name);
+  const tint = getTint(name);
 
   return (
     <>
       <span
-        className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-xl ${
+        className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-xl ${
           available ? tint : "bg-slate-100"
         }`}
       >
-        <span
-          className={`text-3xl leading-none ${available ? "" : "opacity-50 grayscale"}`}
-          aria-hidden
-        >
-          {emoji}
-        </span>
+        <ServiceIllustration name={name} muted={!available} />
       </span>
 
       <span
