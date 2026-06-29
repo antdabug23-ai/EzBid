@@ -207,20 +207,23 @@ export default function ServicesPage() {
   return (
     <div className="min-h-screen w-full bg-white text-slate-900">
 
-      {/* Hero */}
+      {/* Built for local work */}
       <section className="bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-16 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            Free during beta
-          </span>
-          <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-            Services on EZ Bid
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-            Request bids from local independent vendors, small crews, and growing
-            service businesses.
-          </p>
+        <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 sm:pt-16">
+          <div className="rounded-3xl border border-emerald-100 bg-emerald-50/60 p-8 sm:p-10">
+            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+              Built for local work
+            </span>
+            <h1 className="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              A fair place for local vendors to earn work
+            </h1>
+            <p className="mt-3 max-w-3xl text-base text-slate-600">
+              EZ Bid helps homeowners connect with independent service providers,
+              small crews, and growing local businesses. Whether someone is starting
+              with a lawn mower or building a full service company, EZ Bid gives local
+              vendors a fair place to earn work and build reviews.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -244,28 +247,8 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Built for local work */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-16">
-          <div className="rounded-3xl border border-emerald-100 bg-emerald-50/60 p-8 sm:p-10">
-            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
-              Built for local work
-            </span>
-            <h2 className="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-              A fair place for local vendors to earn work
-            </h2>
-            <p className="mt-3 max-w-3xl text-base text-slate-600">
-              EZ Bid helps homeowners connect with independent service providers,
-              small crews, and growing local businesses. Whether someone is starting
-              with a lawn mower or building a full service company, EZ Bid gives local
-              vendors a fair place to earn work and build reviews.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* Coming soon */}
-      <section className="bg-slate-50">
+      <section className="bg-white">
         <div className="mx-auto max-w-6xl px-4 py-16">
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900">
