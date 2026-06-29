@@ -4,7 +4,7 @@ import { getPublicVendorProfile } from "@/lib/services/vendor";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { StarRating } from "@/components/ui/star-rating";
+import { VendorRatingBadge } from "@/components/vendor/VendorRatingBadge";
 
 export const metadata: Metadata = {
   title: "Vendor profile — EZ Bid",
@@ -64,6 +64,10 @@ export default async function VendorProfilePage({
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-2xl font-bold text-slate-900">{vendor.businessName}</h1>
+                  <VendorRatingBadge
+                    averageRating={vendor.averageRating}
+                    reviewCount={vendor.reviewCount}
+                  />
                   <Badge tone="green">Free during beta</Badge>
                 </div>
                 <dl className="mt-3 space-y-1 text-sm">

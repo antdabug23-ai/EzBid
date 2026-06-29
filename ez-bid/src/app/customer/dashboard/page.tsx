@@ -11,6 +11,7 @@ import {
   ServiceIllustration,
   serviceTint,
 } from "@/components/services/ServiceIllustration";
+import { VendorRatingBadge } from "@/components/vendor/VendorRatingBadge";
 
 export const metadata: Metadata = {
   title: "Customer dashboard — EZ Bid",
@@ -254,15 +255,15 @@ export default async function CustomerDashboardPage() {
                                 key={bid.id}
                                 className="flex items-center justify-between text-xs text-slate-600"
                               >
-                                <span className="min-w-0 truncate">
-                                  {bid.vendor.businessName}
-                                  {bid.vendor.reviewCount > 0 ? (
-                                    <span className="ml-1 text-amber-600">
-                                      {"\u2605"} {bid.vendor.averageRating.toFixed(1)}
-                                    </span>
-                                  ) : (
-                                    <span className="ml-1 text-slate-400">· New</span>
-                                  )}
+                                <span className="flex min-w-0 items-center gap-1">
+                                  <span className="truncate">{bid.vendor.businessName}</span>
+                                  <span className="shrink-0 text-slate-300">&middot;</span>
+                                  <VendorRatingBadge
+                                    averageRating={bid.vendor.averageRating}
+                                    reviewCount={bid.vendor.reviewCount}
+                                    compact
+                                    className="shrink-0 text-xs"
+                                  />
                                 </span>
                                 <span className="ml-2 shrink-0 font-medium text-slate-800">
                                   ${bid.amount.toLocaleString()}

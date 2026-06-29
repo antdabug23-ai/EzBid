@@ -5,7 +5,7 @@ import { requireCustomer } from "@/lib/auth/current-user";
 import { getCustomerBid } from "@/lib/services/jobs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { StarRating } from "@/components/ui/star-rating";
+import { VendorRatingBadge } from "@/components/vendor/VendorRatingBadge";
 import { BidStatusBadge } from "@/components/ui/status-badge";
 
 export const metadata: Metadata = {
@@ -71,7 +71,10 @@ export default async function BidReviewPage({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-2">
-            <StarRating rating={bid.vendor.averageRating} count={bid.vendor.reviewCount} />
+            <VendorRatingBadge
+              averageRating={bid.vendor.averageRating}
+              reviewCount={bid.vendor.reviewCount}
+            />
             <dl>
               <DetailRow label="Bid amount" value={`$${bid.amount.toLocaleString()}`} />
               <DetailRow label="Estimated start" value={formatDate(bid.proposedServiceDate)} />
